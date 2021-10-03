@@ -49,26 +49,38 @@ public class Megaman : MonoBehaviour
         bool isGrounded = pies.IsTouchingLayers(LayerMask.GetMask("Ground"));
         if(Input.GetKey(KeyCode.LeftShift) && isGrounded)
         {
-            float mov = Input.GetAxis("Horizontal");
-            switch (mov)
+            int tX = (int)transform.localScale.x;
+
+            switch (tX)
             {
                 case 1:
-                Debug.Log(mov);
-                transform.localScale = new Vector2(Mathf.Sign(mov), 1);
                 myAnimator.SetBool("dash", true);
-                //myBody.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
                 myBody.AddForce(new Vector2(dashSpeed, 0), ForceMode2D.Impulse);
                 break;
                 case -1:
-                Debug.Log(mov);
-                transform.localScale = new Vector2(Mathf.Sign(mov), 1);
                 myAnimator.SetBool("dash", true);
-                //myBody.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
                 myBody.AddForce(new Vector2(-dashSpeed, 0), ForceMode2D.Impulse);
                 break;
             }
             /*
             float mov = Input.GetAxis("Horizontal");
+            if (mov > 0) 
+                {
+                Debug.Log(mov);
+                transform.localScale = new Vector2(Mathf.Sign(mov), 1);
+                myAnimator.SetBool("dash", true);
+                //myBody.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
+                myBody.AddForce(new Vector2(dashSpeed, 0), ForceMode2D.Impulse);
+                } else if (mov < 0) 
+                {
+                Debug.Log(mov);
+                transform.localScale = new Vector2(Mathf.Sign(mov), 1);
+                myAnimator.SetBool("dash", true);
+                //myBody.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
+                myBody.AddForce(new Vector2(-dashSpeed, 0), ForceMode2D.Impulse);
+                }
+            
+            
             if (mov != 0)
             {
                 Debug.Log(mov);
