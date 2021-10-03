@@ -50,6 +50,25 @@ public class Megaman : MonoBehaviour
         if(Input.GetKey(KeyCode.LeftShift) && isGrounded)
         {
             float mov = Input.GetAxis("Horizontal");
+            switch (mov)
+            {
+                case 1:
+                Debug.Log(mov);
+                transform.localScale = new Vector2(Mathf.Sign(mov), 1);
+                myAnimator.SetBool("dash", true);
+                //myBody.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
+                myBody.AddForce(new Vector2(dashSpeed, 0), ForceMode2D.Impulse);
+                break;
+                case -1:
+                Debug.Log(mov);
+                transform.localScale = new Vector2(Mathf.Sign(mov), 1);
+                myAnimator.SetBool("dash", true);
+                //myBody.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
+                myBody.AddForce(new Vector2(-dashSpeed, 0), ForceMode2D.Impulse);
+                break;
+            }
+            /*
+            float mov = Input.GetAxis("Horizontal");
             if (mov != 0)
             {
                 Debug.Log(mov);
@@ -58,18 +77,7 @@ public class Megaman : MonoBehaviour
                 //myBody.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
                 myBody.AddForce(new Vector2(dashSpeed, 0), ForceMode2D.Impulse);
             }
-        }
-        else if (Input.GetKey(KeyCode.LeftShift) && !isGrounded)
-        {
-           float mov = Input.GetAxis("Horizontal");
-            if (mov != 0)
-            {
-                Debug.Log(mov);
-                transform.localScale = new Vector2(Mathf.Sign(mov), 1);
-                myAnimator.SetBool("dash", true);
-                //myBody.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
-                myBody.AddForce(new Vector2(dashSpeed, 0), ForceMode2D.Impulse);
-            } 
+            */
         }
     }
 
