@@ -2515,11 +2515,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1265300053, guid: d06a81efe4f149e4ca583f4a52ca5a1a, type: 3}
       propertyPath: dashSpeed
-      value: 3
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1265300053, guid: d06a81efe4f149e4ca583f4a52ca5a1a, type: 3}
       propertyPath: jumpSpeed
       value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 1265300053, guid: d06a81efe4f149e4ca583f4a52ca5a1a, type: 3}
+      propertyPath: jumpSpeed2
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 1265300053, guid: d06a81efe4f149e4ca583f4a52ca5a1a, type: 3}
       propertyPath: fallingSprite

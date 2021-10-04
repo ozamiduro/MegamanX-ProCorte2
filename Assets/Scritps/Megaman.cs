@@ -8,12 +8,17 @@ public class Megaman : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] BoxCollider2D pies;
     [SerializeField] float jumpSpeed;
+    [SerializeField] float jumpSpeed2;
     [SerializeField] float dashSpeed;
     [SerializeField] GameObject Bullet;
     [SerializeField] float nextfire;
     private int fireCounter = 0;
     private bool shortFuse = false;
     float canFire;
+    private bool salto = false;
+    private float timer;
+    private bool secSalto = false;
+    private int secondsCounter;
 
     Animator myAnimator;
     Rigidbody2D myBody;
@@ -35,8 +40,27 @@ public class Megaman : MonoBehaviour
         Falling();
         if (shortFuse)
             fireCounter++;
+        if (salto)
+            timer += Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.Space) && timer > 0.15 && secSalto)
+        {
+            myBody.velocity = new Vector2(myBody.velocity.x, jumpSpeed2);
+            Debug.Log("Sec");
+            secSalto = false;
+        }
         Fire();
         Dash();
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            secondsCounter++;
+            Debug.Log(secondsCounter);
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            secondsCounter = 0;
+            myBody.velocity = new Vector2(dashSpeed/2, 0);
+        }
     }
 
     void Fire()
@@ -75,6 +99,7 @@ public class Megaman : MonoBehaviour
 
     void Dash()
     {
+        /*
         bool isGrounded = pies.IsTouchingLayers(LayerMask.GetMask("Ground"));
         if(Input.GetKey(KeyCode.LeftShift) && isGrounded)
         {
@@ -91,36 +116,43 @@ public class Megaman : MonoBehaviour
                 myBody.AddForce(new Vector2(-dashSpeed, 0), ForceMode2D.Impulse);
                 break;
             }
-            /*
-            float mov = Input.GetAxis("Horizontal");
-            if (mov > 0) 
-                {
-                Debug.Log(mov);
-                transform.localScale = new Vector2(Mathf.Sign(mov), 1);
-                myAnimator.SetBool("dash", true);
-                //myBody.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
-                myBody.AddForce(new Vector2(dashSpeed, 0), ForceMode2D.Impulse);
-                } else if (mov < 0) 
-                {
-                Debug.Log(mov);
-                transform.localScale = new Vector2(Mathf.Sign(mov), 1);
-                myAnimator.SetBool("dash", true);
-                //myBody.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
-                myBody.AddForce(new Vector2(-dashSpeed, 0), ForceMode2D.Impulse);
-                }
             
-            
-            if (mov != 0)
-            {
-                Debug.Log(mov);
-                transform.localScale = new Vector2(Mathf.Sign(mov), 1);
-                myAnimator.SetBool("dash", true);
-                //myBody.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
-                myBody.AddForce(new Vector2(dashSpeed, 0), ForceMode2D.Impulse);
-            }
-            */
         }
-    }
+        */
+            myAnimator.SetBool("falling", false);
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+
+                int tx = (int)transform.localScale.x;
+                bool isGrounded = pies.IsTouchingLayers(LayerMask.GetMask("Ground"));
+                if (isGrounded)
+                {
+                myAnimator.SetBool("falling", false);
+                if (secondsCounter <= 15)
+                    {
+                        switch (tx)
+                        {
+                            case 1:
+                                myAnimator.SetBool("dash", true);
+                                myAnimator.SetBool("falling", false);
+                                myBody.velocity = new Vector2(dashSpeed, 0);
+                                break;
+
+                            case -1:
+                                myAnimator.SetBool("dash", true);
+                                myAnimator.SetBool("falling", false);
+                                myBody.velocity = new Vector2(-dashSpeed, 0);
+                                break;
+                        }
+                    }
+
+                }
+                else if (Input.GetKeyUp(KeyCode.LeftShift))
+                {
+                    secondsCounter = 0;
+                }
+            }
+        }
 
     void Mover()
     {
@@ -145,11 +177,16 @@ public class Megaman : MonoBehaviour
         {
             myAnimator.SetBool("falling", false);
             myAnimator.SetBool("jumping", false);
+            salto = false;
+            timer = 0;
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 myAnimator.SetTrigger("takeof");
                 myAnimator.SetBool("jumping", true);
                 myBody.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
+                secSalto = true;
+                salto = true;
+                Debug.Log("Fer");
             }
         }
     }
