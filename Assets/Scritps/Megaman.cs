@@ -49,7 +49,6 @@ public class Megaman : MonoBehaviour
             secSalto = false;
         }
         Fire();
-        Dash();
         if (Input.GetKey(KeyCode.LeftShift))
         {
             secondsCounter++;
@@ -59,8 +58,9 @@ public class Megaman : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             secondsCounter = 0;
-            myBody.velocity = new Vector2(dashSpeed/2, 0);
+            myBody.velocity = new Vector2(dashSpeed / 2, 0);
         }
+        Dash();
     }
 
     void Fire()
@@ -76,7 +76,7 @@ public class Megaman : MonoBehaviour
             }
         }
 
-        if (fireCounter > 130) 
+        if (fireCounter > 130)
         {
             myAnimator.SetLayerWeight(1, 0);
             fireCounter = 0;
@@ -86,7 +86,7 @@ public class Megaman : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && Time.time >= canFire)
         {
 
-            Instantiate(Bullet, transform.position - new Vector3(0.9f,0) * (transform.localScale.x*-1), transform.rotation);
+            Instantiate(Bullet, transform.position - new Vector3(0.9f, 0) * (transform.localScale.x * -1), transform.rotation);
             canFire = Time.time + nextfire;
         }
 
@@ -99,60 +99,39 @@ public class Megaman : MonoBehaviour
 
     void Dash()
     {
-        /*
-        bool isGrounded = pies.IsTouchingLayers(LayerMask.GetMask("Ground"));
-        if(Input.GetKey(KeyCode.LeftShift) && isGrounded)
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            int tX = (int)transform.localScale.x;
-
-            switch (tX)
-            {
-                case 1:
-                myAnimator.SetBool("dash", true);
-                myBody.AddForce(new Vector2(dashSpeed, 0), ForceMode2D.Impulse);
-                break;
-                case -1:
-                myAnimator.SetBool("dash", true);
-                myBody.AddForce(new Vector2(-dashSpeed, 0), ForceMode2D.Impulse);
-                break;
-            }
-            
-        }
-        */
             myAnimator.SetBool("falling", false);
-            if (Input.GetKey(KeyCode.LeftShift))
+            int tx = (int)transform.localScale.x;
+            //bool isGrounded = pies.IsTouchingLayers(LayerMask.GetMask("Ground"));
+            if (isGrounded())
             {
-
-                int tx = (int)transform.localScale.x;
-                bool isGrounded = pies.IsTouchingLayers(LayerMask.GetMask("Ground"));
-                if (isGrounded)
-                {
                 myAnimator.SetBool("falling", false);
                 if (secondsCounter <= 15)
-                    {
-                        switch (tx)
-                        {
-                            case 1:
-                                myAnimator.SetBool("dash", true);
-                                myAnimator.SetBool("falling", false);
-                                myBody.velocity = new Vector2(dashSpeed, 0);
-                                break;
-
-                            case -1:
-                                myAnimator.SetBool("dash", true);
-                                myAnimator.SetBool("falling", false);
-                                myBody.velocity = new Vector2(-dashSpeed, 0);
-                                break;
-                        }
-                    }
-
-                }
-                else if (Input.GetKeyUp(KeyCode.LeftShift))
                 {
-                    secondsCounter = 0;
+                    switch (tx)
+                    {
+                        case 1:
+                            myAnimator.SetBool("dash", true);
+                            myAnimator.SetBool("falling", false);
+                            myBody.velocity = new Vector2(dashSpeed, 0);
+                            break;
+
+                        case -1:
+                            myAnimator.SetBool("dash", true);
+                            myAnimator.SetBool("falling", false);
+                            myBody.velocity = new Vector2(-dashSpeed, 0);
+                            break;
+                    }
                 }
+
+            }
+            else if (Input.GetKeyUp(KeyCode.LeftShift))
+            {
+                secondsCounter = 0;
             }
         }
+    }
 
     void Mover()
     {
@@ -172,8 +151,8 @@ public class Megaman : MonoBehaviour
 
     void Saltar()
     {
-        bool isGrounded = pies.IsTouchingLayers(LayerMask.GetMask("Ground"));
-        if (isGrounded && !myAnimator.GetBool("jumping"))
+        //bool isGrounded = pies.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        if (isGrounded() && !myAnimator.GetBool("jumping"))
         {
             myAnimator.SetBool("falling", false);
             myAnimator.SetBool("jumping", false);
@@ -193,7 +172,8 @@ public class Megaman : MonoBehaviour
 
     void Falling()
     {
-        if(myBody.velocity.y < 0 && !myAnimator.GetBool("jumping"))
+        //bool isGrounded = pies.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        if (myBody.velocity.y < 0 && !myAnimator.GetBool("jumping") && !isGrounded())
         {
             myAnimator.SetBool("falling", true);
         }
@@ -203,7 +183,7 @@ public class Megaman : MonoBehaviour
     {
         //return pies.IsTouchingLayers(Layers.GetMas)
         RaycastHit2D myRaycast = Physics2D.Raycast(myCollider.bounds.center, Vector2.down, myCollider.bounds.extents.y + 0.2f, LayerMask.GetMask("Ground"));
-        Debug.DrawRay(myCollider.bounds.center,new Vector2(0, (myCollider.bounds.extents.y + 0.2f)*-1), Color.white);
+        Debug.DrawRay(myCollider.bounds.center, new Vector2(0, (myCollider.bounds.extents.y + 0.2f) * -1), Color.white);
         return myRaycast.collider != null;
 
     }
