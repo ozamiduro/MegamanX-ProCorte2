@@ -9,6 +9,11 @@ public class Megaman : MonoBehaviour
     [SerializeField] BoxCollider2D pies;
     [SerializeField] float jumpSpeed;
     [SerializeField] float dashSpeed;
+    [SerializeField] GameObject Bullet;
+    [SerializeField] float nextfire;
+    private int fireCounter = 0;
+    private bool shortFuse = false;
+    float canFire;
 
     Animator myAnimator;
     Rigidbody2D myBody;
@@ -28,20 +33,44 @@ public class Megaman : MonoBehaviour
         Mover();
         Saltar();
         Falling();
+        if (shortFuse)
+            fireCounter++;
         Fire();
         Dash();
     }
 
     void Fire()
     {
-        if (Input.GetKey(KeyCode.X))
+
+        if (Input.GetMouseButton(0))
         {
-            myAnimator.SetLayerWeight(1,1);
+            fireCounter = 1;
+            myAnimator.SetLayerWeight(1, 1);
+            if (fireCounter < 25)
+            {
+                shortFuse = true;
+            }
         }
-        else
+
+        if (fireCounter > 130) 
         {
             myAnimator.SetLayerWeight(1, 0);
+            fireCounter = 0;
+            shortFuse = false;
         }
+
+        if (Input.GetMouseButtonDown(0) && Time.time >= canFire)
+        {
+
+            Instantiate(Bullet, transform.position - new Vector3(0.9f,0) * (transform.localScale.x*-1), transform.rotation);
+            canFire = Time.time + nextfire;
+        }
+
+
+
+        //for (int i=0; i > 6000; i++)
+
+        // myAnimator.SetLayerWeight(1, 0);
     }
 
     void Dash()
